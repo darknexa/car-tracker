@@ -237,9 +237,6 @@
   .lightbox.open{ display:flex; }
   .lightbox img{ max-width:90vw; max-height:85vh; border-radius:4px; }
 
-  .config-banner{ background:#FCEFE3; border:1px solid var(--amber); color:#5a3d16; border-radius:6px; padding:10px 14px; font-size:12.5px; margin-bottom:16px; display:none; }
-  .config-banner.show{ display:block; }
-
   /* Footer */
   footer.foot{ 
     flex-shrink: 0;
@@ -275,10 +272,6 @@
 
 <main>
 
-  <div id="configBanner" class="config-banner">
-    ⚠️ 尚未设定 Firebase 项目金钥。请于 <code>&lt;script&gt;</code> 区块中的 <code>firebaseConfig</code> 填入你自己 Firebase 专案的设定值。
-  </div>
-
   <div class="summary-row">
     <div class="gauge-card">
       <div class="label">纪录笔数</div>
@@ -292,7 +285,7 @@
 
   <section id="adminPanel" class="admin-panel" style="display:none;">
     <h2 id="formTitle">➕ 新增保养纪录</h2>
-    <p class="hint" id="formHint">填写完成后按「储存纪录」，资料会即时同步。支持上传多张照片并已开启自动高压压缩。</p>
+    <p class="hint" id="formHint">填写完成后按「储存纪录」，资料会即时同步。支持上传多张照片并开启自动压缩。</p>
     <form id="addForm">
       <input type="hidden" id="editRecordId" value="">
       <div class="form-grid">
@@ -368,36 +361,33 @@
   <img id="lightboxImg" src="" alt="单据照片">
 </div>
 
-<!-- Firebase SDK -->
+<!-- Firebase SDK (仅用于 Realtime Database) -->
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-storage-compat.js"></script>
 
 <script>
+/* Firebase Realtime Database 设定 */
 const firebaseConfig = {
   apiKey: "AIzaSyAoAI8AsWGkSX2Xvt8bXIhdkjbob_e2Suo",
   authDomain: "car-maintenance-tracker-40760.firebaseapp.com",
   databaseURL: "https://car-maintenance-tracker-40760-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "car-maintenance-tracker-40760",
-  storageBucket: "car-maintenance-tracker-40760.firebasestorage.app",
-  messagingSenderId: "880206600055",
-  appId: "1:880206600055:web:40b6d6d63b700da9ceb372",
-  measurementId: "G-SYZWFTWS2Z"
+  projectId: "car-maintenance-tracker-40760"
 };
 
+/* ☁️ Cloudinary 免卡图床设定 */
+const CLOUDINARY_CLOUD_NAME = "ujjdntli";
+const CLOUDINARY_UPLOAD_PRESET = "fcdszyte";
+
 const RECORDS_PATH = "carMaintenanceRecords";
-let db = null, storage = null, firebaseReady = false;
+let db = null, firebaseReady = false;
 
 try{
-  if(firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY"){
+  if(firebaseConfig.apiKey){
     firebase.initializeApp(firebaseConfig);
     db = firebase.database();
-    storage = firebase.storage();
     firebaseReady = true;
   }
 }catch(e){ console.error("Firebase 初始化失败：", e); }
-
-if(!firebaseReady) document.getElementById('configBanner').classList.add('show');
 
 /* ---------------- 权限与年份筛选 ---------------- */
 const params = new URLSearchParams(window.location.search);
@@ -429,7 +419,7 @@ function escapeHtml(str){
 function compressImage(file, maxWidth = 1600, quality = 0.7) {
   return new Promise((resolve) => {
     if (!file.type.startsWith('image/')) {
-      resolve(file); // 非图片文件直接返回原档
+      resolve(file);
       return;
     }
     const reader = new FileReader();
@@ -457,6 +447,22 @@ function compressImage(file, maxWidth = 1600, quality = 0.7) {
   });
 }
 
+/* 🚀 上传图片至 Cloudinary 免费图床 */
+async function uploadToCloudinary(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+  const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+  const res = await fetch(url, { method: 'POST', body: formData });
+  const data = await res.json();
+  if (data.secure_url) {
+    return data.secure_url;
+  } else {
+    throw new Error('Cloudinary 上传失败');
+  }
+}
+
 /* ---------------- 渲染 ---------------- */
 let currentRecords = [];
 
@@ -474,12 +480,11 @@ function render(){
     tbody.innerHTML = `<tr class="empty-row"><td colspan="${isAdmin ? 5 : 4}">尚无 ${selectedYear === 'ALL' ? '' : selectedYear + ' 年的'}纪录</td></tr>`;
   }else{
     tbody.innerHTML = sorted.map(r => {
-      // 兼容多附件格式 (receipts 数组) 与旧版的单一附件格式
       let attachments = [];
       if (r.receipts && Array.isArray(r.receipts)) {
         attachments = r.receipts;
       } else if (r.receiptURL) {
-        attachments = [{ url: r.receiptURL, path: r.receiptPath }];
+        attachments = [{ url: r.receiptURL }];
       }
 
       const receiptLinksHTML = attachments.length > 0
@@ -507,7 +512,6 @@ function render(){
   document.getElementById('statCount').textContent = sorted.length;
   document.getElementById('statTotal').textContent = fmtRM(total);
 
-  // 收集所有照片展示在 Gallery
   let allPhotos = [];
   sorted.forEach(r => {
     let list = [];
@@ -574,7 +578,7 @@ window.resetForm = function() {
   const panel = document.getElementById('adminPanel');
   panel.classList.remove('edit-mode');
   document.getElementById('formTitle').textContent = '➕ 新增保养纪录';
-  document.getElementById('formHint').textContent = '填写完成后按「储存纪录」，资料会即时同步。支持上传多张照片并已开启自动高压压缩。';
+  document.getElementById('formHint').textContent = '填写完成后按「储存纪录」，资料会即时同步。支持上传多张照片并开启自动压缩。';
   
   const submitBtn = document.getElementById('submitBtn');
   submitBtn.textContent = '储存纪录';
@@ -609,24 +613,19 @@ if(isAdmin){
         const oldRec = currentRecords.find(r => r.id === editId);
         if (oldRec) {
           if (oldRec.receipts) existingAttachments = oldRec.receipts;
-          else if (oldRec.receiptURL) existingAttachments = [{ url: oldRec.receiptURL, path: oldRec.receiptPath }];
+          else if (oldRec.receiptURL) existingAttachments = [{ url: oldRec.receiptURL }];
         }
       } else {
         recordRef = db.ref(RECORDS_PATH).push();
       }
 
-      const recordId = recordRef.key;
       let newAttachments = [];
 
-      // 循环压缩并上传多张照片
       for (let i = 0; i < files.length; i++) {
-        statusEl.textContent = `压缩上传中 (${i+1}/${files.length})…`;
+        statusEl.textContent = `上传照片中 (${i+1}/${files.length})…`;
         const compressedFile = await compressImage(files[i]);
-        const path = `receipts/${recordId}_${Date.now()}_${compressedFile.name}`;
-        const storageRef = storage.ref().child(path);
-        await storageRef.put(compressedFile);
-        const url = await storageRef.getDownloadURL();
-        newAttachments.push({ url, path });
+        const imgUrl = await uploadToCloudinary(compressedFile);
+        newAttachments.push({ url: imgUrl });
       }
 
       const finalReceipts = [...existingAttachments, ...newAttachments];
@@ -648,7 +647,7 @@ if(isAdmin){
       setTimeout(() => { statusEl.textContent = ''; }, 2000);
     }catch(err){
       console.error(err);
-      statusEl.textContent = '储存失败';
+      statusEl.textContent = '储存失败，请重试';
     }finally{
       submitBtn.disabled = false;
     }
@@ -657,21 +656,8 @@ if(isAdmin){
 
 /* ---------------- 删除纪录 ---------------- */
 window.deleteRecord = async function(id){
-  if(!isAdmin || !confirm('确定要删除这笔纪录及其所有照片附件？')) return;
+  if(!isAdmin || !confirm('确定要删除这笔纪录？')) return;
   try{
-    const rec = currentRecords.find(r => r.id === id);
-    if (rec) {
-      let attachments = [];
-      if (rec.receipts) attachments = rec.receipts;
-      else if (rec.receiptPath) attachments = [{ path: rec.receiptPath }];
-
-      // 删除 Storage 里的图片
-      for (let att of attachments) {
-        if (att.path) {
-          try { await storage.ref().child(att.path).delete(); } catch(e){}
-        }
-      }
-    }
     await db.ref(`${RECORDS_PATH}/${id}`).remove();
   }catch(err){ alert('删除失败'); }
 };
