@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>汽车保养消费记录 - BLX 9280</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --slate-bg:#3A4454;
+    --steel:#525D6E;
+    --concrete:#F1EEE7;
+    --panel:#FFFFFF;
+    --amber:#E29A3C;
+    --amber-dark:#B87A28;
+    --rust:#B14B2C;
+    --moss:#4C7A5D;
+    --line:#DCD6C9;
+    --ink:#20242A;
+    --ink-soft:#63676E;
+  }
+  *{box-sizing:border-box;}
+  
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--concrete);
+    color: var(--ink);
+    font-family: 'Noto Sans SC', sans-serif;
+    line-height: 1.5;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(59,65,73,0.04) 0 1px, transparent 1px 28px),
+      repeating-linear-gradient(90deg, rgba(59,65,73,0.04) 0 1px, transparent 1px 28px);
+    background-attachment: fixed;
+  }
+
+  /* ---------- Header ---------- */
+  header.top{
+    background:var(--slate-bg);
+    color:#EDE9DF;
+    padding:20px 6vw;
+    position:relative;
+    border-bottom:4px solid var(--amber);
+  }
+  .top-inner{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    max-width:1100px;
+    margin:0 auto;
+  }
+  h1.title{
+    font-size:clamp(22px, 3.2vw, 28px);
+    font-weight:900;
+    letter-spacing:0.5px;
+    margin:0;
+    color:#FFF;
+  }
+
+  .plate-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:#EDE9DF;
+    color:var(--ink);
+    padding:8px 10px;
+    border-radius:6px;
+    box-shadow:0 2px 4px rgba(0,0,0,0.2);
+    border:1.5px solid var(--ink);
+  }
+  .plate-badge .car-emoji{
+    font-size:20px;
+    filter:grayscale(1) contrast(1.1);
+    line-height:1;
+    display:flex;
+    align-items:center;
+    transform: translateY(-1.5px);
+  }
+  .plate-badge .plate-text{
+    font-weight:700;
+    font-size:17px;
+    letter-spacing:1px;
+    border-left:1.5px dashed var(--steel);
+    padding-left:8px;
+    line-height:1;
+    display:flex;
+    align-items:center;
+  }
+
+  main{
+    flex: 1 0 auto;
+    width: 100%;
+    max-width:1100px;
+    margin:0 auto;
+    padding:24px 6vw 40px;
+  }
+
+  /* ---------- Summary Strip ---------- */
+  .summary-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    margin-bottom:24px;
+  }
+  .gauge-card{
+    flex:1 1 180px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:14px 18px;
+    box-shadow:0 1px 2px rgba(0,0,0,0.03);
+  }
+  .gauge-card .label{ font-size:12px; color:var(--ink-soft); margin-bottom:2px; }
+  .gauge-card .value{ font-weight:700; font-size:22px; color:var(--ink); }
+  .gauge-card.total{ background:var(--slate-bg); border-color:var(--slate-bg); }
+  .gauge-card.total .label{ color:#B9B2A2; }
+  .gauge-card.total .value{ color:var(--amber); font-size:24px; }
+
+  /* ---------- Admin Form ---------- */
+  .admin-panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-left:4px solid var(--amber);
+    border-radius:8px;
+    padding:18px 20px;
+    margin-bottom:28px;
+  }
+  .admin-panel h2{ margin:0 0 4px; font-size:15px; font-weight:700; }
+  .admin-panel .hint{ font-size:12px; color:var(--ink-soft); margin:0 0 14px; }
+  .form-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; align-items:end; }
+  @media (max-width:820px){ .form-grid{grid-template-columns:1fr 1fr;} }
+  .field label{ display:block; font-size:11.5px; color:var(--ink-soft); margin-bottom:4px; }
+  .field input[type=text], .field input[type=date], .field input[type=number]{
+    width:100%; padding:7px 9px; border:1px solid var(--line); border-radius:5px;
+    font-family:inherit; font-size:13px; background:#FBFAF7;
+  }
+  .btn{ border:none; cursor:pointer; font-family:inherit; font-weight:600; border-radius:5px; padding:8px 14px; font-size:13px; }
+  .btn-primary{ background:var(--amber); color:#221a0d; }
+  .btn-primary:hover{ background:var(--amber-dark); color:#fff; }
+  .btn-danger{ background:transparent; color:var(--rust); border:1px solid var(--rust); padding:3px 8px; font-size:11.5px; border-radius:4px; }
+  .btn-danger:hover{ background:var(--rust); color:#fff; }
+
+  /* ---------- Table ---------- */
+  .table-wrap{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+    margin-bottom:28px;
+  }
+  .table-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 18px;
+    border-bottom:1px solid var(--line);
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .table-head h2{ font-size:15px; margin:0; font-weight:700; }
+  
+  .year-tabs{ display:flex; gap:4px; background:#EFECE6; padding:2px; border-radius:5px; }
+  .year-tab{
+    border:none; background:transparent; padding:3px 10px; font-size:12px;
+    font-weight:700; color:var(--ink-soft); border-radius:3px; cursor:pointer;
+  }
+  .year-tab.active{ background:var(--panel); color:var(--ink); box-shadow:0 1px 2px rgba(0,0,0,0.08); }
+
+  table{ width:100%; border-collapse:collapse; }
+  
+  thead th{
+    text-align:left; font-size:12px; color:var(--ink-soft); font-weight:600;
+    padding:10px 14px; background:#F7F5F0; border-bottom:1px solid var(--line); 
+    border-right:1px solid var(--line); white-space:nowrap;
+  }
+  thead th:last-child{ border-right:none; }
+  thead th.num{ text-align:right; }
+
+  tbody td{ 
+    padding:11px 14px; 
+    border-bottom:1px solid var(--line); 
+    border-right:1px solid rgba(220, 214, 201, 0.55); 
+    font-size:13.5px; 
+    vertical-align:middle; 
+  }
+  tbody td:last-child{ border-right:none; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:#FDFBF7; }
+  
+  td.amount{ text-align:right; font-weight:700; }
+  td.date{ color:var(--ink-soft); font-size:13px; }
+  .receipt-link{ color:var(--amber-dark); text-decoration:none; font-weight:500; font-size:12.5px; border-bottom:1px dashed var(--amber-dark); }
+  .receipt-link:hover{ color:var(--rust); border-color:var(--rust); }
+  .no-receipt{ color:#C0B9AC; font-size:12px; }
+  .empty-row td{ text-align:center; padding:32px 14px; color:var(--ink-soft); border-right:none; }
+
+  /* ---------- Gallery ---------- */
+  .gallery-head{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .gallery-head h2{ font-size:15px; margin:0; font-weight:700; }
+  .corkboard{
+    background:#CBB58B;
+    background-image:radial-gradient(rgba(0,0,0,0.06) 1px, transparent 1px);
+    background-size:12px 12px;
+    border-radius:10px; padding:20px 16px;
+    box-shadow:inset 0 0 15px rgba(60,42,10,0.15);
+  }
+  .gallery-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:16px; }
+  .photo-card{
+    background:#fff; padding:6px 6px 8px; border-radius:3px;
+    box-shadow:0 3px 8px rgba(0,0,0,0.15); cursor:pointer;
+    transition:transform .15s ease;
+  }
+  .photo-card:hover{ transform:scale(1.03); z-index:2; }
+  .photo-card .thumb{ width:100%; aspect-ratio:4/3; object-fit:cover; display:block; background:#EEE; }
+  .photo-card .cap{ padding-top:6px; font-size:11px; text-align:center; }
+
+  /* Lightbox */
+  .lightbox{ position:fixed; inset:0; background:rgba(0,0,0,0.85); display:none; align-items:center; justify-content:center; z-index:999; }
+  .lightbox.open{ display:flex; }
+  .lightbox img{ max-width:90vw; max-height:85vh; border-radius:4px; }
+
+  .config-banner{ background:#FCEFE3; border:1px solid var(--amber); color:#5a3d16; border-radius:6px; padding:10px 14px; font-size:12.5px; margin-bottom:16px; display:none; }
+  .config-banner.show{ display:block; }
+
+  /* Footer */
+  footer.foot{ 
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: #837E73; 
+    font-size: 12.5px; 
+    font-weight: 500;
+    padding: 20px 20px 28px; 
+    letter-spacing: 0.3px;
+  }
+  .key-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    opacity: 0.85;
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <h1 class="title">汽车保养消费记录</h1>
+    <div class="plate-badge">
+      <span class="car-emoji">🚗</span>
+      <span class="plate-text">BLX 9280</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div id="configBanner" class="config-banner">
+    ⚠️ 尚未设定 Firebase 项目金钥。请于 <code>&lt;script&gt;</code> 区块中的 <code>firebaseConfig</code> 填入你自己 Firebase 专案的设定值。
+  </div>
+
+  <div class="summary-row">
+    <div class="gauge-card">
+      <div class="label">纪录笔数</div>
+      <div class="value" id="statCount">0</div>
+    </div>
+    <div class="gauge-card total">
+      <div class="label">累积总消费金额 (RM)</div>
+      <div class="value" id="statTotal">RM 0.00</div>
+    </div>
+  </div>
+
+  <section id="adminPanel" class="admin-panel" style="display:none;">
+    <h2>➕ 新增保养纪录</h2>
+    <p class="hint">填写完成后按「储存纪录」，资料会即时同步。</p>
+    <form id="addForm">
+      <div class="form-grid">
+        <div class="field">
+          <label for="fDate">日期</label>
+          <input type="date" id="fDate" required>
+        </div>
+        <div class="field">
+          <label for="fDesc">保养 / 维修项目描述</label>
+          <input type="text" id="fDesc" placeholder="例：更换机油与机油芯" required>
+        </div>
+        <div class="field">
+          <label for="fAmount">金额 (RM)</label>
+          <input type="number" id="fAmount" step="0.01" min="0" placeholder="0.00" required>
+        </div>
+        <div class="field">
+          <label for="fFile">收据照片</label>
+          <input type="file" id="fFile" accept="image/*">
+        </div>
+      </div>
+      <div style="margin-top:14px; display:flex; align-items:center; gap:12px;">
+        <button type="submit" class="btn btn-primary" id="submitBtn">储存纪录</button>
+        <span id="uploadStatus" style="font-size:12px;"></span>
+      </div>
+    </form>
+  </section>
+
+  <div class="table-wrap">
+    <div class="table-head">
+      <h2>保养与维修明细</h2>
+      <div class="year-tabs">
+        <button class="year-tab active" onclick="setYearFilter('2026', this)">2026</button>
+        <button class="year-tab" onclick="setYearFilter('ALL', this)">全部</button>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>日期</th>
+          <th>保养 / 维修项目描述</th>
+          <th class="num">金额 (RM)</th>
+          <th>收据</th>
+          <th id="thAction" style="display:none;">操作</th>
+        </tr>
+      </thead>
+      <tbody id="recordsBody">
+        <tr class="empty-row"><td colspan="5">尚无任何纪录</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section>
+    <div class="gallery-head">
+      <h2>附件 Attachments</h2>
+      <span style="font-size:12px; color:var(--ink-soft);" id="galleryCount">共 0 张</span>
+    </div>
+    <div class="corkboard">
+      <div id="galleryGrid" class="gallery-grid"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <svg class="key-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M68 18C57.5 18 49 26.5 49 37C49 40.5 50 43.7 51.7 46.4L18 80.1V90H28.1L33 85.1V78H40.1L45 73.1V66H52.1L58.6 59.5C61.3 61.2 64.5 62.2 68 62.2 C78.5 62.2 87 53.7 87 43.2C87 32.7 78.5 18 68 18ZM73 38C70.2 38 68 35.8 68 33C68 30.2 70.2 28 73 28C75.8 28 78 30.2 78 33C78 35.8 75.8 38 73 38Z" fill="#3B4149"/>
+  </svg>
+  <span>06.07.2026</span>
+</footer>
+
+<div class="lightbox" id="lightbox">
+  <img id="lightboxImg" src="" alt="单据照片">
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-storage-compat.js"></script>
+
+<script>
+/* 已填入你的專屬 Firebase Key */
+const firebaseConfig = {
+  apiKey: "AIzaSyAoAI8AsWGkSX2Xvt8bXIhdkjbob_e2Suo",
+  authDomain: "car-maintenance-tracker-40760.firebaseapp.com",
+  databaseURL: "https://car-maintenance-tracker-40760-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "car-maintenance-tracker-40760",
+  storageBucket: "car-maintenance-tracker-40760.firebasestorage.app",
+  messagingSenderId: "880206600055",
+  appId: "1:880206600055:web:40b6d6d63b700da9ceb372",
+  measurementId: "G-SYZWFTWS2Z"
+};
+
+const RECORDS_PATH = "carMaintenanceRecords";
+let db = null, storage = null, firebaseReady = false;
+
+try{
+  if(firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY"){
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+    storage = firebase.storage();
+    firebaseReady = true;
+  }
+}catch(e){ console.error("Firebase 初始化失败：", e); }
+
+if(!firebaseReady) document.getElementById('configBanner').classList.add('show');
+
+/* ---------------- 权限与年份筛选 ---------------- */
+const params = new URLSearchParams(window.location.search);
+const isAdmin = params.get('role') === 'admin';
+let selectedYear = '2026';
+
+if(isAdmin){
+  document.getElementById('adminPanel').style.display = 'block';
+  document.getElementById('thAction').style.display = 'table-cell';
+}
+
+function setYearFilter(year, btn){
+  selectedYear = year;
+  document.querySelectorAll('.year-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+/* ---------------- 工具函式 ---------------- */
+function fmtRM(n){
+  const num = Number(n) || 0;
+  return 'RM ' + num.toLocaleString('en-MY', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function escapeHtml(str){
+  return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ---------------- 渲染 ---------------- */
+let currentRecords = [];
+
+function render(){
+  const tbody = document.getElementById('recordsBody');
+  const gallery = document.getElementById('galleryGrid');
+
+  let filtered = currentRecords.filter(r => {
+    if(selectedYear === 'ALL') return true;
+    return r.date && r.date.startsWith(selectedYear);
+  });
+  const sorted = filtered.sort((a,b) => (b.date || '').localeCompare(a.date || ''));
+
+  if(sorted.length === 0){
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="${isAdmin ? 5 : 4}">尚无 ${selectedYear === 'ALL' ? '' : selectedYear + ' 年的'}纪录</td></tr>`;
+  }else{
+    tbody.innerHTML = sorted.map(r => `
+      <tr>
+        <td class="date">${escapeHtml(r.date || '-')}</td>
+        <td>${escapeHtml(r.description || '-')}</td>
+        <td class="amount">${fmtRM(r.amount)}</td>
+        <td>${r.receiptURL
+              ? `<a class="receipt-link" href="#" onclick="openLightbox('${r.receiptURL}');return false;">查看</a>`
+              : `<span class="no-receipt">无</span>`}</td>
+        ${isAdmin ? `<td><button class="btn btn-danger" onclick="deleteRecord('${r.id}', '${r.receiptPath || ''}')">删除</button></td>` : ''}
+      </tr>
+    `).join('');
+  }
+
+  const total = sorted.reduce((s,r) => s + (Number(r.amount) || 0), 0);
+  document.getElementById('statCount').textContent = sorted.length;
+  document.getElementById('statTotal').textContent = fmtRM(total);
+
+  const withPhotos = sorted.filter(r => r.receiptURL);
+  document.getElementById('galleryCount').textContent = `共 ${withPhotos.length} 张`;
+  if(withPhotos.length === 0){
+    gallery.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#7A6B4D; font-size:12.5px;">尚无收据照片</div>`;
+  }else{
+    gallery.innerHTML = withPhotos.map(r => `
+      <div class="photo-card" onclick="openLightbox('${r.receiptURL}')">
+        <img class="thumb" src="${r.receiptURL}" alt="收据" loading="lazy">
+        <div class="cap">${escapeHtml(r.date || '-')} • <span style="color:var(--rust); font-weight:700;">${fmtRM(r.amount)}</span></div>
+      </div>
+    `).join('');
+  }
+}
+
+/* ---------------- Firebase 即时同步 ---------------- */
+if(firebaseReady){
+  db.ref(RECORDS_PATH).on('value', snapshot => {
+    const val = snapshot.val() || {};
+    currentRecords = Object.keys(val).map(id => ({ id, ...val[id] }));
+    render();
+  });
+}else{
+  render();
+}
+
+/* ---------------- 新增纪录 ---------------- */
+if(isAdmin){
+  document.getElementById('addForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if(!firebaseReady){ alert('请先配置 Firebase！'); return; }
+    
+    const date = document.getElementById('fDate').value;
+    const description = document.getElementById('fDesc').value.trim();
+    const amount = parseFloat(document.getElementById('fAmount').value);
+    const file = document.getElementById('fFile').files[0];
+    const statusEl = document.getElementById('uploadStatus');
+    const submitBtn = document.getElementById('submitBtn');
+
+    submitBtn.disabled = true;
+    statusEl.textContent = '储存中…';
+
+    try{
+      const newRef = db.ref(RECORDS_PATH).push();
+      const recordId = newRef.key;
+      let receiptURL = '', receiptPath = '';
+
+      if(file){
+        receiptPath = `receipts/${recordId}_${file.name}`;
+        const storageRef = storage.ref().child(receiptPath);
+        await storageRef.put(file);
+        receiptURL = await storageRef.getDownloadURL();
+      }
+
+      await newRef.set({ date, description, amount, receiptURL, receiptPath, createdAt: Date.now() });
+
+      statusEl.textContent = '✔ 已储存';
+      document.getElementById('addForm').reset();
+      setTimeout(() => { statusEl.textContent = ''; }, 2000);
+    }catch(err){
+      console.error(err);
+      statusEl.textContent = '储存失败';
+    }finally{
+      submitBtn.disabled = false;
+    }
+  });
+}
+
+/* ---------------- 删除纪录 ---------------- */
+window.deleteRecord = async function(id, receiptPath){
+  if(!isAdmin || !confirm('确定要删除这笔纪录？')) return;
+  try{
+    await db.ref(`${RECORDS_PATH}/${id}`).remove();
+    if(receiptPath) { try{ await storage.ref().child(receiptPath).delete(); }catch(e){} }
+  }catch(err){ alert('删除失败'); }
+};
+
+/* ---------------- Lightbox ---------------- */
+window.openLightbox = function(url){
+  document.getElementById('lightboxImg').src = url;
+  document.getElementById('lightbox').classList.add('open');
+};
+document.getElementById('lightbox').addEventListener('click', () => {
+  document.getElementById('lightbox').classList.remove('open');
+});
+</script>
+</body>
+</html>
