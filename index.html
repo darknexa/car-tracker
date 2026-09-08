@@ -22,122 +22,45 @@
   }
   *{box-sizing:border-box;}
   
-  html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
+  html, body { height: 100%; margin: 0; padding: 0; }
   body {
-    display: flex;
-    flex-direction: column;
-    background-color: var(--concrete);
-    color: var(--ink);
-    font-family: 'Noto Sans SC', sans-serif;
-    line-height: 1.5;
+    display: flex; flex-direction: column; background-color: var(--concrete);
+    color: var(--ink); font-family: 'Noto Sans SC', sans-serif; line-height: 1.5;
     background-image:
       repeating-linear-gradient(0deg, rgba(59,65,73,0.04) 0 1px, transparent 1px 28px),
       repeating-linear-gradient(90deg, rgba(59,65,73,0.04) 0 1px, transparent 1px 28px);
     background-attachment: fixed;
   }
 
-  /* ---------- Header ---------- */
-  header.top{
-    background:var(--slate-bg);
-    color:#EDE9DF;
-    padding:20px 6vw;
-    position:relative;
-    border-bottom:4px solid var(--amber);
-  }
-  .top-inner{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    max-width:1100px;
-    margin:0 auto;
-  }
-  h1.title{
-    font-size:clamp(22px, 3.2vw, 28px);
-    font-weight:900;
-    letter-spacing:0.5px;
-    margin:0;
-    color:#FFF;
-  }
+  /* Header */
+  header.top{ background:var(--slate-bg); color:#EDE9DF; padding:20px 6vw; position:relative; border-bottom:4px solid var(--amber); }
+  .top-inner{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; max-width:1100px; margin:0 auto; }
+  h1.title{ font-size:clamp(22px, 3.2vw, 28px); font-weight:900; letter-spacing:0.5px; margin:0; color:#FFF; }
 
   .plate-badge{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    background:#EDE9DF;
-    color:var(--ink);
-    padding:8px 10px;
-    border-radius:6px;
-    box-shadow:0 2px 4px rgba(0,0,0,0.2);
-    border:1.5px solid var(--ink);
+    display:inline-flex; align-items:center; gap:8px; background:#EDE9DF; color:var(--ink);
+    padding:8px 10px; border-radius:6px; box-shadow:0 2px 4px rgba(0,0,0,0.2); border:1.5px solid var(--ink);
   }
-  .plate-badge .car-emoji{
-    font-size:20px;
-    filter:grayscale(1) contrast(1.1);
-    line-height:1;
-    display:flex;
-    align-items:center;
-    transform: translateY(-1.5px);
-  }
-  .plate-badge .plate-text{
-    font-weight:700;
-    font-size:17px;
-    letter-spacing:1px;
-    border-left:1.5px dashed var(--steel);
-    padding-left:8px;
-    line-height:1;
-    display:flex;
-    align-items:center;
-  }
+  .plate-badge .car-emoji{ font-size:20px; filter:grayscale(1) contrast(1.1); line-height:1; display:flex; align-items:center; transform: translateY(-1.5px); }
+  .plate-badge .plate-text{ font-weight:700; font-size:17px; letter-spacing:1px; border-left:1.5px dashed var(--steel); padding-left:8px; line-height:1; display:flex; align-items:center; }
 
-  main{
-    flex: 1 0 auto;
-    width: 100%;
-    max-width:1100px;
-    margin:0 auto;
-    padding:24px 6vw 40px;
-  }
+  main{ flex: 1 0 auto; width: 100%; max-width:1100px; margin:0 auto; padding:24px 6vw 40px; }
 
-  /* ---------- Summary Strip ---------- */
-  .summary-row{
-    display:flex;
-    flex-wrap:wrap;
-    gap:14px;
-    margin-bottom:24px;
-  }
-  .gauge-card{
-    flex:1 1 180px;
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:8px;
-    padding:14px 18px;
-    box-shadow:0 1px 2px rgba(0,0,0,0.03);
-  }
+  /* Summary Strip */
+  .summary-row{ display:flex; flex-wrap:wrap; gap:14px; margin-bottom:24px; }
+  .gauge-card{ flex:1 1 180px; background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px 18px; box-shadow:0 1px 2px rgba(0,0,0,0.03); }
   .gauge-card .label{ font-size:12px; color:var(--ink-soft); margin-bottom:2px; }
   .gauge-card .value{ font-weight:700; font-size:22px; color:var(--ink); }
   .gauge-card.total{ background:var(--slate-bg); border-color:var(--slate-bg); }
   .gauge-card.total .label{ color:#B9B2A2; }
   .gauge-card.total .value{ color:var(--amber); font-size:24px; }
 
-  /* ---------- Admin Form ---------- */
+  /* Admin Form */
   .admin-panel{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-left:4px solid var(--amber);
-    border-radius:8px;
-    padding:18px 20px;
-    margin-bottom:28px;
-    transition: all 0.2s ease;
+    background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--amber);
+    border-radius:8px; padding:18px 20px; margin-bottom:28px; transition: all 0.2s ease;
   }
-  .admin-panel.edit-mode {
-    border-left-color: var(--moss);
-    background: #F4F7F4;
-  }
+  .admin-panel.edit-mode { border-left-color: var(--moss); background: #F4F7F4; }
   .admin-panel h2{ margin:0 0 4px; font-size:15px; font-weight:700; }
   .admin-panel .hint{ font-size:12px; color:var(--ink-soft); margin:0 0 14px; }
   .form-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; align-items:end; }
@@ -147,6 +70,19 @@
     width:100%; padding:7px 9px; border:1px solid var(--line); border-radius:5px;
     font-family:inherit; font-size:13px; background:#FBFAF7;
   }
+  
+  /* Edit Photo Preview Box */
+  .existing-photos-manage { margin-top: 12px; padding: 10px; background: #EAE6DF; border-radius: 6px; display: none; }
+  .existing-photos-manage label { font-size: 11.5px; color: var(--ink-soft); font-weight: 700; display: block; margin-bottom: 6px; }
+  .photo-manage-list { display: flex; gap: 8px; flex-wrap: wrap; }
+  .photo-manage-item { position: relative; width: 48px; height: 48px; border-radius: 4px; overflow: hidden; border: 1px solid #CCC; }
+  .photo-manage-item img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-manage-item .btn-del-photo {
+    position: absolute; top: 2px; right: 2px; background: rgba(177,75,44,0.9); color: #fff;
+    border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 10px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;
+  }
+
   .btn{ border:none; cursor:pointer; font-family:inherit; font-weight:600; border-radius:5px; padding:8px 14px; font-size:13px; }
   .btn-primary{ background:var(--amber); color:#221a0d; }
   .btn-primary:hover{ background:var(--amber-dark); color:#fff; }
@@ -158,34 +94,16 @@
   .btn-danger{ background:transparent; color:var(--rust); border:1px solid var(--rust); padding:3px 8px; font-size:11.5px; border-radius:4px; }
   .btn-danger:hover{ background:var(--rust); color:#fff; }
 
-  /* ---------- Table ---------- */
-  .table-wrap{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:8px;
-    overflow:hidden;
-    margin-bottom:28px;
-  }
-  .table-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:12px 18px;
-    border-bottom:1px solid var(--line);
-    flex-wrap:wrap;
-    gap:10px;
-  }
+  /* Table */
+  .table-wrap{ background:var(--panel); border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-bottom:28px; }
+  .table-head{ display:flex; justify-content:space-between; align-items:center; padding:12px 18px; border-bottom:1px solid var(--line); flex-wrap:wrap; gap:10px; }
   .table-head h2{ font-size:15px; margin:0; font-weight:700; }
   
   .year-tabs{ display:flex; gap:4px; background:#EFECE6; padding:2px; border-radius:5px; }
-  .year-tab{
-    border:none; background:transparent; padding:3px 10px; font-size:12px;
-    font-weight:700; color:var(--ink-soft); border-radius:3px; cursor:pointer;
-  }
+  .year-tab{ border:none; background:transparent; padding:3px 10px; font-size:12px; font-weight:700; color:var(--ink-soft); border-radius:3px; cursor:pointer; }
   .year-tab.active{ background:var(--panel); color:var(--ink); box-shadow:0 1px 2px rgba(0,0,0,0.08); }
 
   table{ width:100%; border-collapse:collapse; }
-  
   thead th{
     text-align:left; font-size:12px; color:var(--ink-soft); font-weight:600;
     padding:10px 14px; background:#F7F5F0; border-bottom:1px solid var(--line); 
@@ -195,11 +113,8 @@
   thead th.num{ text-align:right; }
 
   tbody td{ 
-    padding:11px 14px; 
-    border-bottom:1px solid var(--line); 
-    border-right:1px solid rgba(220, 214, 201, 0.55); 
-    font-size:13.5px; 
-    vertical-align:middle; 
+    padding:11px 14px; border-bottom:1px solid var(--line); 
+    border-right:1px solid rgba(220, 214, 201, 0.55); font-size:13.5px; vertical-align:middle; 
   }
   tbody td:last-child{ border-right:none; }
   tbody tr:last-child td{ border-bottom:none; }
@@ -207,26 +122,28 @@
   
   td.amount{ text-align:right; font-weight:700; }
   td.date{ color:var(--ink-soft); font-size:13px; }
-  .receipt-link{ color:var(--amber-dark); text-decoration:none; font-weight:500; font-size:12.5px; border-bottom:1px dashed var(--amber-dark); margin-right:6px; cursor:pointer;}
-  .receipt-link:hover{ color:var(--rust); border-color:var(--rust); }
+
+  /* 🖼️ Table Micro Thumbnail */
+  .table-thumbs-container { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .table-micro-thumb {
+    width: 36px; height: 36px; border-radius: 4px; object-fit: cover;
+    border: 1px solid var(--line); cursor: pointer; transition: transform 0.15s ease;
+  }
+  .table-micro-thumb:hover { transform: scale(1.15); z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
   .no-receipt{ color:#C0B9AC; font-size:12px; }
   .empty-row td{ text-align:center; padding:32px 14px; color:var(--ink-soft); border-right:none; }
 
-  /* ---------- Gallery ---------- */
+  /* Gallery */
   .gallery-head{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
   .gallery-head h2{ font-size:15px; margin:0; font-weight:700; }
   .corkboard{
-    background:#CBB58B;
-    background-image:radial-gradient(rgba(0,0,0,0.06) 1px, transparent 1px);
-    background-size:12px 12px;
-    border-radius:10px; padding:20px 16px;
-    box-shadow:inset 0 0 15px rgba(60,42,10,0.15);
+    background:#CBB58B; background-image:radial-gradient(rgba(0,0,0,0.06) 1px, transparent 1px);
+    background-size:12px 12px; border-radius:10px; padding:20px 16px; box-shadow:inset 0 0 15px rgba(60,42,10,0.15);
   }
   .gallery-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:16px; }
   .photo-card{
     background:#fff; padding:6px 6px 8px; border-radius:3px;
-    box-shadow:0 3px 8px rgba(0,0,0,0.15); cursor:pointer;
-    transition:transform .15s ease;
+    box-shadow:0 3px 8px rgba(0,0,0,0.15); cursor:pointer; transition:transform .15s ease;
   }
   .photo-card:hover{ transform:scale(1.03); z-index:2; }
   .photo-card .thumb{ width:100%; aspect-ratio:4/3; object-fit:cover; display:block; background:#EEE; }
@@ -239,23 +156,10 @@
 
   /* Footer */
   footer.foot{ 
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    color: #837E73; 
-    font-size: 12.5px; 
-    font-weight: 500;
-    padding: 20px 20px 28px; 
-    letter-spacing: 0.3px;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    gap: 2px; color: #837E73; font-size: 12.5px; font-weight: 500; padding: 20px 20px 28px; letter-spacing: 0.3px;
   }
-  .key-icon {
-    width: 18px;
-    height: 18px;
-    object-fit: contain;
-    opacity: 0.85;
-  }
+  .key-icon { width: 18px; height: 18px; object-fit: contain; opacity: 0.85; }
 </style>
 </head>
 <body>
@@ -285,7 +189,7 @@
 
   <section id="adminPanel" class="admin-panel" style="display:none;">
     <h2 id="formTitle">➕ 新增保养纪录</h2>
-    <p class="hint" id="formHint">填写完成后按「储存纪录」，资料会即时同步。支持上传多张照片并开启自动压缩。</p>
+    <p class="hint" id="formHint">填写完成后按「储存纪录」，资料会即时同步。</p>
     <form id="addForm">
       <input type="hidden" id="editRecordId" value="">
       <div class="form-grid">
@@ -302,10 +206,17 @@
           <input type="number" id="fAmount" step="0.01" min="0" placeholder="0.00" required>
         </div>
         <div class="field">
-          <label for="fFile">收据照片 (可多选)</label>
+          <label for="fFile">上传新收据 (可多选)</label>
           <input type="file" id="fFile" accept="image/*" multiple>
         </div>
       </div>
+
+      <!-- 编辑模式下展示现有照片供移除 -->
+      <div class="existing-photos-manage" id="managePhotosBox">
+        <label>现有照片（点击 ✕ 可单独移除照片）：</label>
+        <div class="photo-manage-list" id="managePhotosList"></div>
+      </div>
+
       <div style="margin-top:14px; display:flex; align-items:center; gap:12px;">
         <button type="submit" class="btn btn-primary" id="submitBtn">储存纪录</button>
         <button type="button" class="btn btn-secondary" id="cancelBtn" style="display:none;" onclick="resetForm()">取消编辑</button>
@@ -328,7 +239,7 @@
           <th>日期</th>
           <th>保养 / 维修项目描述</th>
           <th class="num">金额 (RM)</th>
-          <th>收据附件</th>
+          <th>收据</th>
           <th id="thAction" style="display:none;">操作</th>
         </tr>
       </thead>
@@ -361,12 +272,11 @@
   <img id="lightboxImg" src="" alt="单据照片">
 </div>
 
-<!-- Firebase SDK (仅用于 Realtime Database) -->
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
 
 <script>
-/* Firebase Realtime Database 设定 */
 const firebaseConfig = {
   apiKey: "AIzaSyAoAI8AsWGkSX2Xvt8bXIhdkjbob_e2Suo",
   authDomain: "car-maintenance-tracker-40760.firebaseapp.com",
@@ -374,7 +284,6 @@ const firebaseConfig = {
   projectId: "car-maintenance-tracker-40760"
 };
 
-/* ☁️ Cloudinary 免卡图床设定 */
 const CLOUDINARY_CLOUD_NAME = "ujjdntli";
 const CLOUDINARY_UPLOAD_PRESET = "fcdszyte";
 
@@ -389,10 +298,11 @@ try{
   }
 }catch(e){ console.error("Firebase 初始化失败：", e); }
 
-/* ---------------- 权限与年份筛选 ---------------- */
+/* 权限与年份 */
 const params = new URLSearchParams(window.location.search);
 const isAdmin = params.get('role') === 'admin';
 let selectedYear = '2026';
+let editingPhotos = []; // 暂存编辑模式下的照片列表
 
 if(isAdmin){
   document.getElementById('adminPanel').style.display = 'block';
@@ -406,7 +316,6 @@ function setYearFilter(year, btn){
   render();
 }
 
-/* ---------------- 工具函式 ---------------- */
 function fmtRM(n){
   const num = Number(n) || 0;
   return 'RM ' + num.toLocaleString('en-MY', {minimumFractionDigits:2, maximumFractionDigits:2});
@@ -415,28 +324,23 @@ function escapeHtml(str){
   return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-/* 📷 客户端等比例高压压缩图片 */
+/* 压缩图片 */
 function compressImage(file, maxWidth = 1600, quality = 0.7) {
   return new Promise((resolve) => {
-    if (!file.type.startsWith('image/')) {
-      resolve(file);
-      return;
-    }
+    if (!file.type.startsWith('image/')) { resolve(file); return; }
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = (e) => {
       const img = new Image();
       img.src = e.target.result;
       img.onload = () => {
-        let width = img.width;
-        let height = img.height;
+        let width = img.width, height = img.height;
         if (width > maxWidth) {
           height = Math.round((height * maxWidth) / width);
           width = maxWidth;
         }
         const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = width; canvas.height = height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
         canvas.toBlob((blob) => {
@@ -447,7 +351,7 @@ function compressImage(file, maxWidth = 1600, quality = 0.7) {
   });
 }
 
-/* 🚀 上传图片至 Cloudinary 免费图床 */
+/* 上传至 Cloudinary */
 async function uploadToCloudinary(file) {
   const formData = new FormData();
   formData.append('file', file);
@@ -456,14 +360,11 @@ async function uploadToCloudinary(file) {
   const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
   const res = await fetch(url, { method: 'POST', body: formData });
   const data = await res.json();
-  if (data.secure_url) {
-    return data.secure_url;
-  } else {
-    throw new Error('Cloudinary 上传失败');
-  }
+  if (data.secure_url) return data.secure_url;
+  else throw new Error('Cloudinary 上传失败');
 }
 
-/* ---------------- 渲染 ---------------- */
+/* 渲染 */
 let currentRecords = [];
 
 function render(){
@@ -481,14 +382,14 @@ function render(){
   }else{
     tbody.innerHTML = sorted.map(r => {
       let attachments = [];
-      if (r.receipts && Array.isArray(r.receipts)) {
-        attachments = r.receipts;
-      } else if (r.receiptURL) {
-        attachments = [{ url: r.receiptURL }];
-      }
+      if (r.receipts && Array.isArray(r.receipts)) attachments = r.receipts;
+      else if (r.receiptURL) attachments = [{ url: r.receiptURL }];
 
-      const receiptLinksHTML = attachments.length > 0
-        ? attachments.map((att, idx) => `<a class="receipt-link" onclick="openLightbox('${att.url}')">附件 ${attachments.length > 1 ? (idx + 1) : ''}</a>`).join('')
+      /* 🖼️ 微型照片预览图 */
+      const receiptHTML = attachments.length > 0
+        ? `<div class="table-thumbs-container">` + 
+            attachments.map(att => `<img class="table-micro-thumb" src="${att.url}" onclick="openLightbox('${att.url}')" title="点击看大图">`).join('') +
+          `</div>`
         : `<span class="no-receipt">无</span>`;
 
       return `
@@ -496,7 +397,7 @@ function render(){
           <td class="date">${escapeHtml(r.date || '-')}</td>
           <td>${escapeHtml(r.description || '-')}</td>
           <td class="amount">${fmtRM(r.amount)}</td>
-          <td>${receiptLinksHTML}</td>
+          <td>${receiptHTML}</td>
           ${isAdmin ? `
             <td>
               <button class="btn btn-edit" onclick="startEdit('${r.id}')">编辑</button>
@@ -536,18 +437,15 @@ function render(){
   }
 }
 
-/* ---------------- Firebase 即时同步 ---------------- */
 if(firebaseReady){
   db.ref(RECORDS_PATH).on('value', snapshot => {
     const val = snapshot.val() || {};
     currentRecords = Object.keys(val).map(id => ({ id, ...val[id] }));
     render();
   });
-}else{
-  render();
-}
+}else{ render(); }
 
-/* ---------------- 启动编辑模式 ---------------- */
+/* 启动编辑模式 */
 window.startEdit = function(id) {
   const rec = currentRecords.find(r => r.id === id);
   if (!rec) return;
@@ -557,10 +455,17 @@ window.startEdit = function(id) {
   document.getElementById('fDesc').value = rec.description || '';
   document.getElementById('fAmount').value = rec.amount || '';
 
+  // 载入已有照片
+  if (rec.receipts && Array.isArray(rec.receipts)) editingPhotos = [...rec.receipts];
+  else if (rec.receiptURL) editingPhotos = [{ url: rec.receiptURL }];
+  else editingPhotos = [];
+
+  renderManagePhotos();
+
   const panel = document.getElementById('adminPanel');
   panel.classList.add('edit-mode');
   document.getElementById('formTitle').textContent = '✏️ 编辑保养纪录';
-  document.getElementById('formHint').textContent = '正在修改原有纪录，选择新照片将追加至本笔纪录中。';
+  document.getElementById('formHint').textContent = '正在修改纪录，你可以单独删除照片，或选择新文件追加照片。';
   
   const submitBtn = document.getElementById('submitBtn');
   submitBtn.textContent = '更新纪录';
@@ -570,15 +475,41 @@ window.startEdit = function(id) {
   window.scrollTo({ top: panel.offsetTop - 20, behavior: 'smooth' });
 };
 
-/* ---------------- 重置表单 ---------------- */
+/* 渲染编辑框内的照片管理列表 */
+function renderManagePhotos() {
+  const box = document.getElementById('managePhotosBox');
+  const list = document.getElementById('managePhotosList');
+  if (editingPhotos.length === 0) {
+    box.style.display = 'none';
+    list.innerHTML = '';
+  } else {
+    box.style.display = 'block';
+    list.innerHTML = editingPhotos.map((p, idx) => `
+      <div class="photo-manage-item">
+        <img src="${p.url}">
+        <button type="button" class="btn-del-photo" onclick="removePhotoFromEdit(${idx})">✕</button>
+      </div>
+    `).join('');
+  }
+}
+
+/* 移除编辑模式中的某张照片 */
+window.removePhotoFromEdit = function(idx) {
+  editingPhotos.splice(idx, 1);
+  renderManagePhotos();
+};
+
+/* 重置表单 */
 window.resetForm = function() {
   document.getElementById('addForm').reset();
   document.getElementById('editRecordId').value = '';
+  editingPhotos = [];
+  document.getElementById('managePhotosBox').style.display = 'none';
   
   const panel = document.getElementById('adminPanel');
   panel.classList.remove('edit-mode');
   document.getElementById('formTitle').textContent = '➕ 新增保养纪录';
-  document.getElementById('formHint').textContent = '填写完成后按「储存纪录」，资料会即时同步。支持上传多张照片并开启自动压缩。';
+  document.getElementById('formHint').textContent = '填写完成后按「储存纪录」，资料会即时同步。';
   
   const submitBtn = document.getElementById('submitBtn');
   submitBtn.textContent = '储存纪录';
@@ -587,7 +518,7 @@ window.resetForm = function() {
   document.getElementById('uploadStatus').textContent = '';
 };
 
-/* ---------------- 新增 / 编辑纪录 ---------------- */
+/* 保存 / 更新 */
 if(isAdmin){
   document.getElementById('addForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -606,29 +537,22 @@ if(isAdmin){
 
     try{
       let recordRef;
-      let existingAttachments = [];
-
       if (editId) {
         recordRef = db.ref(`${RECORDS_PATH}/${editId}`);
-        const oldRec = currentRecords.find(r => r.id === editId);
-        if (oldRec) {
-          if (oldRec.receipts) existingAttachments = oldRec.receipts;
-          else if (oldRec.receiptURL) existingAttachments = [{ url: oldRec.receiptURL }];
-        }
       } else {
         recordRef = db.ref(RECORDS_PATH).push();
       }
 
-      let newAttachments = [];
-
+      let newUploaded = [];
       for (let i = 0; i < files.length; i++) {
-        statusEl.textContent = `上传照片中 (${i+1}/${files.length})…`;
+        statusEl.textContent = `上传新照片中 (${i+1}/${files.length})…`;
         const compressedFile = await compressImage(files[i]);
         const imgUrl = await uploadToCloudinary(compressedFile);
-        newAttachments.push({ url: imgUrl });
+        newUploaded.push({ url: imgUrl });
       }
 
-      const finalReceipts = [...existingAttachments, ...newAttachments];
+      // 合并保留的照片与新上传的照片
+      const finalReceipts = editId ? [...editingPhotos, ...newUploaded] : newUploaded;
 
       const payload = {
         date,
@@ -654,15 +578,13 @@ if(isAdmin){
   });
 }
 
-/* ---------------- 删除纪录 ---------------- */
+/* 删除纪录 */
 window.deleteRecord = async function(id){
   if(!isAdmin || !confirm('确定要删除这笔纪录？')) return;
-  try{
-    await db.ref(`${RECORDS_PATH}/${id}`).remove();
-  }catch(err){ alert('删除失败'); }
+  try{ await db.ref(`${RECORDS_PATH}/${id}`).remove(); }catch(err){ alert('删除失败'); }
 };
 
-/* ---------------- Lightbox ---------------- */
+/* Lightbox */
 window.openLightbox = function(url){
   document.getElementById('lightboxImg').src = url;
   document.getElementById('lightbox').classList.add('open');
